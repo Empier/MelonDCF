@@ -1,9 +1,10 @@
 import hashlib
 import os
-filename="C:\\Users\\Kang\\Desktop\\aa.dcf"
+filename="C:\\Users\\NHNEnt\\Desktop\\MyCode\\melonpy\\a\\Wake Up And Dream.dcf"
 
 enc_file=open(filename,"rb")
 filesize = os.path.getsize(filename)
+print filesize
 data=enc_file.read(filesize)
 enc_file.close()
 encrypt_data=data.split(";Size=\"")[1].split("\"\x0d\x0a")[1]
@@ -11,10 +12,9 @@ encrypt_data=data.split(";Size=\"")[1].split("\"\x0d\x0a")[1]
 
 
 sig="49443303000000".decode('hex')
-#번호등록된 폰이 아이폰이라면 900000000 ~ 9999999999
-#번호등록된 폰이 안드로이드폰이라면 10[전화번호8자리] ex)1012341234
 
-for i in range(1000000000,1100000000):
+#9100000000
+for i in range(9000000000,9200000000):
     
     st=str(i)
     data_hash=data[0x0e:0x53]
@@ -28,7 +28,6 @@ for i in range(1000000000,1100000000):
     data_hash=m.digest()
   
     if (ord(encrypt_data[0])^ord(data_hash[0]))==ord(sig[0]):
-
         if (ord(encrypt_data[1])^ord(data_hash[1]))==ord(sig[1]):
             if (ord(encrypt_data[2])^ord(data_hash[2]))==ord(sig[2]):
                 if (ord(encrypt_data[3])^ord(data_hash[3]))==ord(sig[3]):
@@ -36,6 +35,7 @@ for i in range(1000000000,1100000000):
                         if (ord(encrypt_data[5])^ord(data_hash[5]))==ord(sig[5]):
                             if (ord(encrypt_data[6])^ord(data_hash[6]))==ord(sig[6]):
                                 print("KEY="+str(i))
+                                break
                         
                 
 print("End")
