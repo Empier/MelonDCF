@@ -1,0 +1,45 @@
+import hashlib
+import os
+import binascii
+
+
+filename="C:\\Users\\Kang\\Desktop\\ju.dcf"
+
+enc_file=open(filename,"rb")
+filesize = os.path.getsize(filename)
+print(filesize)
+data=enc_file.read(filesize)
+enc_file.close()
+encrypt_data=data.split((";Size=\"".encode()))[1].split("\"\x0d\x0a".encode())[1]
+
+
+
+sig=bytes.fromhex("49443303000000")
+#9002707869
+#9100000000
+# 9140552247 주연
+for i in range(9140552247,9140552248):
+    
+    st=str(i)
+    data_hash=(data[0x0e:0x53])
+    data_hash+="min".encode()
+    data_hash+=st.encode()
+    data_hash+=bytes((ord(st[0])^0xFF).to_bytes(1)  + (ord(st[1])^0xFF).to_bytes(1) + (ord(st[2])^0xFF).to_bytes(1) + (ord(st[3])^0xFF).to_bytes(1) +(ord(st[4])^0xFF).to_bytes(1) + (ord(st[5])^0xFF).to_bytes(1) + (ord(st[6])^0xFF).to_bytes(1) + (ord(st[7])^0xFF).to_bytes(1) +(ord(st[8])^0xFF).to_bytes(1) + (ord(st[9])^0xFF).to_bytes(1) ) 
+    data_hash+="SSE Primary-Level Base Key Generation".encode()
+
+    m = hashlib.sha1()
+    m.update((data_hash))
+    data_hash=m.digest()
+
+    if ((encrypt_data[0])^(data_hash[0]))==(sig[0]):
+        if ((encrypt_data[1])^(data_hash[1]))==(sig[1]):
+            if ((encrypt_data[2])^(data_hash[2]))==(sig[2]):
+                if ((encrypt_data[3])^(data_hash[3]))==(sig[3]):
+                    if ((encrypt_data[4])^(data_hash[4]))==(sig[4]):
+                        if ((encrypt_data[5])^(data_hash[5]))==(sig[5]):
+                            if ((encrypt_data[6])^(data_hash[6]))==(sig[6]):
+                                print("KEY="+str(i))
+                                break
+                        
+                
+print("End")
